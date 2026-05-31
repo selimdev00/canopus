@@ -120,3 +120,7 @@ LOG_LEVEL = getattr(
 
 # Custom favicon (baked into the image at superset/static/assets/images/).
 FAVICONS = [{"href": "/static/assets/images/custom-favicon.png"}]
+
+# Custom navbar logo.
+APP_ICON = "/static/assets/images/custom-logo.png"
+LOGO_TOOLTIP = "Canopus"
