@@ -283,3 +283,19 @@ USER root
 RUN uv pip install .[duckdb]
 USER superset
 CMD ["/app/docker/entrypoints/docker-ci.sh"]
+
+######################################################################
+# Canopus production image - lean + postgres driver + clickhouse-connect
+# + baked production config and branding assets.
+######################################################################
+FROM lean AS canopus
+USER root
+
+# Postgres driver for the metadata DB and the ClickHouse connector.
+RUN uv pip install .[postgres] clickhouse-connect
+
+# Bake the production Superset config onto the PYTHONPATH so the image is
+# self-contained (secrets still come from the environment at runtime).
+COPY docker/canopus/superset_config.py /app/pythonpath/superset_config.py
+
+USER superset
