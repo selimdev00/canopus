@@ -127,3 +127,7 @@ LOGO_TOOLTIP = "Canopus"
 
 # Hide the "Powered by Apache Superset" watermark in Settings -> About.
 SHOW_WATERMARK = False
+
+# Send the logo click to the (now prefix-free) welcome route, which renders the
+# per-user start dashboard configured by docker/canopus/postinit.py.
+LOGO_TARGET_PATH = "/welcome/"
