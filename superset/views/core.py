@@ -947,7 +947,10 @@ class Superset(BaseSupersetView):
             .filter_by(user_id=get_user_id())
             .scalar()
         ):
-            return self.dashboard(dashboard_id_or_slug=str(welcome_dashboard_id))
+            # Redirect to the dashboard URL so the SPA router mounts it. Rendering
+            # the dashboard inline at /welcome/ leaves the page blank because the
+            # client-side route only matches /dashboard/<id>/.
+            return redirect(f"/dashboard/{welcome_dashboard_id}/")
 
         payload = {
             "user": bootstrap_user_data(g.user, include_perms=True),

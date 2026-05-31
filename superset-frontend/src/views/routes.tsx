@@ -216,6 +216,10 @@ export const routes: Routes = [
     Component: Login,
   },
   {
+    path: '/welcome/',
+    Component: Home,
+  },
+  {
     path: '/superset/welcome/',
     Component: Home,
   },
@@ -226,6 +230,10 @@ export const routes: Routes = [
   {
     path: '/dashboard/list/',
     Component: DashboardList,
+  },
+  {
+    path: '/dashboard/:idOrSlug/',
+    Component: Dashboard,
   },
   {
     path: '/superset/dashboard/:idOrSlug/',
