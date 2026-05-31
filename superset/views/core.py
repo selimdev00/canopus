@@ -142,15 +142,21 @@ class Superset(BaseSupersetView):
 
     logger = logging.getLogger(__name__)
 
-    @expose("/superset/")
-    @expose("/superset/<path:subpath>")
+    _LEGACY_METHODS = ("GET", "POST", "PUT", "PATCH", "DELETE")
+
+    @expose("/superset/", methods=_LEGACY_METHODS)
+    @expose("/superset/<path:subpath>", methods=_LEGACY_METHODS)
     def legacy_superset_redirect(self, subpath: str = "") -> FlaskResponse:
         """Back-compat redirect for old /superset/* links to their new clean
         location. A more specific rule (e.g. the retained /superset/explore)
         always wins over this catch-all, so only relocated routes are redirected.
+
+        Uses 308 and accepts all methods so the frontend's hardcoded POSTs to
+        legacy data endpoints (e.g. /superset/explore_json, /superset/log) keep
+        working - 308 preserves the method and body across the redirect.
         """
         query = request.query_string.decode()
-        return redirect(f"/{subpath}" + (f"?{query}" if query else ""), code=302)
+        return redirect(f"/{subpath}" + (f"?{query}" if query else ""), code=308)
 
     @has_access
     @event_logger.log_this
