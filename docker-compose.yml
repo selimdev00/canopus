@@ -65,7 +65,7 @@ services:
     <<: *common-env
     build: *common-build
     container_name: canopus_init
-    command: ["/app/docker/docker-init.sh"]
+    command: ["/app/docker/canopus/init.sh"]
     user: "root"
     depends_on:
       db:
