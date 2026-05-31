@@ -298,4 +298,8 @@ RUN uv pip install .[postgres] clickhouse-connect
 # self-contained (secrets still come from the environment at runtime).
 COPY docker/canopus/superset_config.py /app/pythonpath/superset_config.py
 
+# Custom branding assets. Copied after the frontend asset COPY in python-common
+# so the built bundle cannot clobber them. Served at /static/assets/images/.
+COPY docker/canopus/custom-favicon.png superset/static/assets/images/custom-favicon.png
+
 USER superset

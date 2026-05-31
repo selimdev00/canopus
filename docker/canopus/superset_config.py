@@ -116,5 +116,7 @@ LOG_LEVEL = getattr(
 
 # --------------------------------------------------------------------------
 # Canopus branding & UX customizations
-# (favicon, logo, watermark, start dashboard are added in their own PRs)
 # --------------------------------------------------------------------------
+
+# Custom favicon (baked into the image at superset/static/assets/images/).
+FAVICONS = [{"href": "/static/assets/images/custom-favicon.png"}]
