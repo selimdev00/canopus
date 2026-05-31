@@ -121,9 +121,26 @@ LOG_LEVEL = getattr(
 # Custom favicon (baked into the image at superset/static/assets/images/).
 FAVICONS = [{"href": "/static/assets/images/custom-favicon.png"}]
 
-# Custom navbar logo.
+# Custom navbar logo. APP_ICON drives the legacy menu brand, but in 6.1.0 the
+# rendered navbar logo comes from the theme token brandLogoUrl, which is frozen
+# from APP_ICON at config.py import time (before this override). So also patch
+# the theme brand logo on the default and dark themes.
 APP_ICON = "/static/assets/images/custom-logo.png"
 LOGO_TOOLTIP = "Canopus"
+
+import copy as _copy  # noqa: E402
+
+from superset.config import THEME_DARK as _BASE_THEME_DARK  # noqa: E402
+from superset.config import THEME_DEFAULT as _BASE_THEME_DEFAULT  # noqa: E402
+
+THEME_DEFAULT = _copy.deepcopy(_BASE_THEME_DEFAULT)
+THEME_DEFAULT["token"]["brandLogoUrl"] = APP_ICON
+THEME_DEFAULT["token"]["brandLogoAlt"] = "Canopus"
+
+if _BASE_THEME_DARK:
+    THEME_DARK = _copy.deepcopy(_BASE_THEME_DARK)
+    THEME_DARK["token"]["brandLogoUrl"] = APP_ICON
+    THEME_DARK["token"]["brandLogoAlt"] = "Canopus"
 
 # Hide the "Powered by Apache Superset" watermark in Settings -> About.
 SHOW_WATERMARK = False
