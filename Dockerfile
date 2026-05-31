@@ -301,5 +301,6 @@ COPY docker/canopus/superset_config.py /app/pythonpath/superset_config.py
 # Custom branding assets. Copied after the frontend asset COPY in python-common
 # so the built bundle cannot clobber them. Served at /static/assets/images/.
 COPY docker/canopus/custom-favicon.png superset/static/assets/images/custom-favicon.png
+COPY docker/canopus/custom-logo.png superset/static/assets/images/custom-logo.png
 
 USER superset
