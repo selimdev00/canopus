@@ -133,7 +133,24 @@ SqlResults = dict[str, Any]
 class Superset(BaseSupersetView):
     """The base views for Superset!"""
 
+    # Serve this view's routes from the application root instead of the
+    # Flask-AppBuilder default ("/superset", derived from the class name). This
+    # drops the legacy "/superset/" prefix from URLs such as the dashboard
+    # (/dashboard/<id>/) and the welcome page (/welcome/). url_for() regenerates
+    # the clean paths automatically, so links built by the backend follow suit.
+    route_base = "/"
+
     logger = logging.getLogger(__name__)
+
+    @expose("/superset/")
+    @expose("/superset/<path:subpath>")
+    def legacy_superset_redirect(self, subpath: str = "") -> FlaskResponse:
+        """Back-compat redirect for old /superset/* links to their new clean
+        location. A more specific rule (e.g. the retained /superset/explore)
+        always wins over this catch-all, so only relocated routes are redirected.
+        """
+        query = request.query_string.decode()
+        return redirect(f"/{subpath}" + (f"?{query}" if query else ""), code=302)
 
     @has_access
     @event_logger.log_this
@@ -416,15 +433,19 @@ class Superset(BaseSupersetView):
 
     @has_access
     @event_logger.log_this
+    # Kept under the legacy /superset/explore path: this deprecated GET handler
+    # only redirects to the canonical ExploreView (route_base="/explore"). With
+    # route_base="/" it would otherwise register "/explore" itself, colliding
+    # with ExploreView and producing a redirect loop.
     @expose(
-        "/explore/<datasource_type>/<int:datasource_id>/",
+        "/superset/explore/<datasource_type>/<int:datasource_id>/",
         methods=(
             "GET",
             "POST",
         ),
     )
     @expose(
-        "/explore/",
+        "/superset/explore/",
         methods=(
             "GET",
             "POST",
